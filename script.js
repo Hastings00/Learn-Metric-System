@@ -150,7 +150,7 @@ function downloadPDF() {
 }
 
 function submitToGoogleSheet() {
-    const endpoint = "https://script.google.com/macros/s/AKfycbyzk7zdKasScsyVT97pJ1FnzdluKlOPQmR2HvdHkX7vm6azRrg7pVGvm4t18Frx5pGA/exec"; // Replace with your actual endpoint
+    const endpoint = "https://script.google.com/macros/s/AKfycbzK0Sc3X5FXqGuB_MYo8Tr3AZHHSZ20_5LZ0AU5dCTNEL52rLM_5hK8uX74eJlrb7l9/exec"; // Replace with your actual endpoint
     fetch(endpoint, {
         method: "POST",
         headers: {
