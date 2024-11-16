@@ -4,16 +4,28 @@
   <meta charset="UTF-8">
   <title>Untitled</title>
   <link rel="stylesheet" href="./style.css">
+  <style>
+    .image-container img {
+        width: 300px;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        margin: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .image-container img:hover {
+        transform: scale(1.05); /* Slightly enlarges the image on hover */
+    }
+</style>
 
 </head>
 <body>
-<div style="position: relative; top: 10px; left: 10px;">
-    <blockquote class="imgur-embed-pub" lang="en" data-id="a/SEKo3Pr" data-context="false" style="transform: translateY(-70%);">
-        <a href="//imgur.com/a/SEKo3Pr"></a>
-    </blockquote>
-    <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+<div class="image-container">
+    <a href='https://postimg.cc/gxDwj5M9' target='_blank'>
+        <img src='https://i.postimg.cc/gxDwj5M9/flc-design20241116246497.jpg' border='0' alt='flc-design20241116246497'/>
+    </a>
 </div>
-
     <h1 id="main-title">Learn Metric System</h1>
     <div id="student-form">
         <label for="class">Standard:</label>
