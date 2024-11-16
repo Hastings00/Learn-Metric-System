@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="doc-title">LMS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 id="main-title">Learn Metric System</h1>
+    <div id="student-form">
+        <label for="class">Standard:</label>
+        <input type="text" id="class" required>
+        <label for="name">Student Name:</label>
+        <input type="text" id="name" required>
+        
+        <label for="sex">Sex:</label>
+        <select id="sex" required>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+        </select>
+
+        <div id="subjects">
+            <label for="english">English:</label>
+            <input type="number" id="english" required>
+            
+            <label for="maths">Maths:</label>
+            <input type="number" id="maths" required>
+            
+            <label for="chichewa">Chichewa:</label>
+            <input type="number" id="chichewa" required>
+            
+            <label for="life-skills">Life Skills:</label>
+            <input type="number" id="life-skills" required>
+            
+            <label for="expressive-arts">Expressive Arts:</label>
+            <input type="number" id="expressive-arts" required>
+            
+            <label for="social-studies">Social Studies:</label>
+            <input type="number" id="social-studies" required>
+            
+            <label for="agri-science">Agriculture & Science:</label>
+            <input type="number" id="agri-science" required>
+        </div>
+
+        <button onclick="addStudent()">Add Student</button>
+        <button onclick="finalizeEntries()">Finalize Entries</button>
+        <button onclick="downloadCSV()">Download CSV</button>
+        <button onclick="downloadPDF()">Download PDF</button>
+        <button onclick="submitToGoogleSheet()">Submit to Google Sheet</button>
+    </div>
+
+    <h2 id="class-title">Student List</h2>
+     
+    <table id="student-table">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Name</th>
+                <th>Sex</th>
+                <th>Eng</th>
+                <th>Mat</th>
+                <th>Chi</th>
+                <th>Lif</th>
+                <th>Exp</th>
+                <th>Sos</th>
+                <th>Agr & Sci</th>
+                <th>Total</th>
+                <th>Rem</th>
+            </tr>
+        </thead>
+        <tbody id="student-list">
+            <!-- Student rows will be appended here -->
+        </tbody>
+    </table>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        let students = [];
+
+        const classInput = document.getElementById('class');
+        const docTitle = document.getElementById('doc-title');
+        const mainTitle = document.getElementById('main-title');
+        const classTitle = document.getElementById('class-title');
+
+        classInput.addEventListener('input', function() {
+            const classValue = classInput.value.trim();
+            if (classValue) {
+                docTitle.textContent = `LMS - ${classValue}`;
+                mainTitle.textContent = `Learn Metric System - Class ${classValue}`;
+                classTitle.textContent = `Student List - Class ${classValue}`;
+            } else {
+                docTitle.textContent = 'LMS';
+                mainTitle.textContent = 'Learn Metric System';
+                classTitle.textContent = 'Student List';
+            }
+        });
+
+        function addStudent() {
+            const classValue = document.getElementById('class').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const sex = document.getElementById('sex').value;
+            if (!name || !classValue) {
+                alert("Please fill in the class and student name.");
+                return;
+            }
+
+            const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
+            let marks = [];
+            let totalMarks = 0;
+
+            subjects.forEach(subject => {
+                const mark = parseInt(document.getElementById(subject).value) || 0;
+                marks.push(mark);
+                totalMarks += mark;
+            });
+
+            const remarks = getRemarks(totalMarks);
+
+            const student = {
+                class: classValue,
+                name: name,
+                sex: sex,
+                marks: marks,
+                totalMarks: totalMarks,
+                remarks: remarks
+            };
+
+            students.push(student);
+            clearForm();
+        }
+
+        function getRemarks(totalMarks) {
+            if (totalMarks < 300) {
+                return "Failed";
+            } else if (totalMarks <= 350) {
+                return "Average";
+            } else if (totalMarks <= 400) {
+                return "Good";
+            } else if (totalMarks <= 500) {
+                return "Very Good";
+            } else {
+                return "Excellent";
+            }
+        }
+
+        function finalizeEntries() {
+            students.sort((a, b) => b.totalMarks - a.totalMarks); // Sort students by total marks in descending order
+            displayStudents();
+        }
+
+        function displayStudents() {
+            const studentList = document.getElementById('student-list');
+            studentList.innerHTML = '';
+
+            students.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td style="min-width: 150px;">${student.name}</td>
+                    <td>${student.sex}</td>
+                    <td>${student.marks[0]}</td>
+                    <td>${student.marks[1]}</td>
+                    <td>${student.marks[2]}</td>
+                    <td>${student.marks[3]}</td>
+                    <td>${student.marks[4]}</td>
+                    <td>${student.marks[5]}</td>
+                    <td>${student.marks[6]}</td>
+                    <td>${student.totalMarks}</td>
+                    <td>${student.remarks}</td>
+                `;
+                studentList.appendChild(row);
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('sex').value = 'M';
+            const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
+            subjects.forEach(subject => {
+                document.getElementById(subject).value = '';
+            });
+        }
+
+        function downloadCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Total,Rem\n";
+
+            students.forEach((student, index) => {
+                let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.totalMarks},${student.remarks}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "student_data.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Student Marks Report", 10, 10);
+            doc.autoTable({
+                head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Total', 'Rem']],
+                body: students.map((student, index) => [
+                    student.class,
+                    index + 1,
+                    student.name,
+                    student.sex,
+                    student.marks[0],
+                    student.marks[1],
+                    student.marks[2],
+                    student.marks[3],
+                    student.marks[4],
+                    student.marks[5],
+                    student.marks[6],
+                    student.totalMarks,
+                    student.remarks
+                ]),
+                styles: { cellPadding: 2, fontSize: 8 },
+                columnStyles: { 1: { minCellWidth: 30 } }
+            });
+            doc.save('student_data.pdf');
+        }
+
+        function submitToGoogleSheet() {
+            const endpoint = "https://script.google.com/macros/s/AKfycbzQRI7hgrcz6JSBgF0SvLMOktzv7KAKeG38pzPa4DBHQtfGIduU72f5B-ecQv235Yuy/exec"; // Replace with your actual endpoint
+            fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(students)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data submitted successfully:", data);
+                alert("Data submitted successfully to Google Sheet!");
+            })
+            .catch(error => {
+                console.error("Error submitting data:", error);
+                alert("Failed to submit data to Google Sheet.");
+            });
+        }
+    </script>
+</body>
+</html>
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>

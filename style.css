@@ -1,0 +1,137 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+#student-form {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto 30px;
+}
+
+#student-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+#student-form input[type="text"], 
+#student-form input[type="number"], 
+#student-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+#student-form input[type="text"]:focus, 
+#student-form input[type="number"]:focus, 
+#student-form select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+#student-form button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#student-form button:hover {
+    background-color: #45a049;
+}
+
+#student-form button:active {
+    background-color: #3e8e41;
+    transform: scale(0.98);
+}
+
+/* Table Styling */
+#student-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+#student-table th, #student-table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+#student-table th {
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Table Rows Styling */
+#student-table td {
+    background-color: #f9f9f9;
+}
+
+#student-table tr:nth-child(even) td {
+    background-color: #f1f1f1;
+}
+
+#student-table tr:hover td {
+    background-color: #e0e0e0;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    #student-form {
+        padding: 15px;
+    }
+
+    #student-form input[type="text"], 
+    #student-form input[type="number"], 
+    #student-form select {
+        font-size: 14px;
+    }
+
+    #student-form button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    #student-table th, #student-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
