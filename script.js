@@ -156,14 +156,14 @@ function downloadPDF() {
 }
 
 function submitToGoogleSheet() {
-    const endpoint = "https://script.google.com/macros/s/AKfycbw4eKU7MdX1hDUm35xgeuuGmITNL7byYUbiuykymgyiCjiiwzDCQrP-IGTySPkxl9vt/exec"; // Replace with your actual endpoint
+    const endpoint = "https://script.google.com/macros/s/AKfycbw4eKU7MdX1hDUm35xgeuuGmITNL7byYUbiuykymgyiCjiiwzDCQrP-IGTySPkxl9vt/exec"; // Updated endpoint
     
     // Check if students array is not empty
     if (students.length === 0) {
         alert("No student data to submit.");
         return;
     }
-    
+
     fetch(endpoint, {
         method: "POST",
         headers: {
@@ -173,6 +173,7 @@ function submitToGoogleSheet() {
     })
     .then(response => {
         if (!response.ok) {
+            console.error("Error response:", response);
             throw new Error("Network response was not ok");
         }
         return response.json();
@@ -183,7 +184,7 @@ function submitToGoogleSheet() {
     })
     .catch(error => {
         console.error("Error submitting data:", error);
-        alert("Failed to submit data to Google Sheet.");
+        alert("Failed to submit data to Google Sheet. Please check the console for details.");
     });
 }
 
