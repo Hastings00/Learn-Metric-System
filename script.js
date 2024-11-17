@@ -175,7 +175,7 @@ function sendEmailWithResults() {
         message: emailContent,
         recipient_email: "recipient@example.com", // Replace with actual recipient
         subject: "Finalized Student Results"
-    }, "YOUR_PUBLIC_KEY")
+    }, "QFCfDntsjA5TcK0G2")
     .then(response => {
         alert("Email sent successfully!");
         console.log("SUCCESS:", response.status, response.text);
