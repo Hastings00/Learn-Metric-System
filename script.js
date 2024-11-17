@@ -156,7 +156,7 @@ function downloadPDF() {
 }
 
 function submitToGoogleSheet() {
-    const endpoint = "https://script.google.com/macros/s/AKfycbw4eKU7MdX1hDUm35xgeuuGmITNL7byYUbiuykymgyiCjiiwzDCQrP-IGTySPkxl9vt/exec"; // Updated endpoint
+    const endpoint = "https://script.google.com/macros/s/AKfycbzgHX6cdyYmb_EZYuo3Ldh92-wz-D1Xjg3k2ptBR4bQJjvT8dhiL7DzztE4o50amIVa/exec"; // Updated endpoint
     
     // Check if students array is not empty
     if (students.length === 0) {
