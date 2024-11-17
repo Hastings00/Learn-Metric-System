@@ -171,7 +171,7 @@ function sendEmailWithResults() {
         `Position: ${index + 1}, Name: ${student.name}, Total Marks: ${student.totalMarks}, Remarks: ${student.remarks}`
     ).join('\n');
 
-    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    emailjs.send("service_bq3459o", "template_3remqv", {
         message: emailContent,
         recipient_email: "recipient@example.com", // Replace with actual recipient
         subject: "Finalized Student Results"
