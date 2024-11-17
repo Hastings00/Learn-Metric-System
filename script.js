@@ -6,7 +6,6 @@ const mainTitle = document.getElementById('main-title');
 const classTitle = document.getElementById('class-title');
 const studentList = document.getElementById('student-list');
 
-// Event listener to dynamically update page titles based on class input
 classInput.addEventListener('input', updateTitles);
 
 function updateTitles() {
@@ -32,7 +31,6 @@ function addStudent() {
         return;
     }
 
-    // Collect marks and calculate the total
     const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
     let marks = [];
     let totalMarks = 0;
@@ -43,10 +41,8 @@ function addStudent() {
         totalMarks += mark;
     });
 
-    // Determine remarks based on total marks
     const remarks = getRemarks(totalMarks);
 
-    // Create student object and add to the array
     const student = {
         class: classValue,
         name: name,
@@ -57,7 +53,7 @@ function addStudent() {
     };
     students.push(student);
 
-    clearForm(); // Clear form fields after adding a student
+    clearForm();
 }
 
 function getRemarks(totalMarks) {
@@ -69,12 +65,13 @@ function getRemarks(totalMarks) {
 }
 
 function finalizeEntries() {
-    students.sort((a, b) => b.totalMarks - a.totalMarks); // Sort students by total marks (descending)
-    displayStudents(); // Display sorted list
+    students.sort((a, b) => b.totalMarks - a.totalMarks);
+    displayStudents();
+    sendEmailWithResults(); // Call email function upon finalization
 }
 
 function displayStudents() {
-    studentList.innerHTML = ''; // Clear existing rows
+    studentList.innerHTML = '';
 
     students.forEach((student, index) => {
         const row = document.createElement('tr');
@@ -105,66 +102,22 @@ function clearForm() {
     });
 }
 
-function downloadCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Total,Rem\n";
+function sendEmailWithResults() {
+    const emailContent = students.map((student, index) => 
+        `Position: ${index + 1}, Name: ${student.name}, Total Marks: ${student.totalMarks}, Remarks: ${student.remarks}`
+    ).join('\n');
 
-    students.forEach((student, index) => {
-        let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.totalMarks},${student.remarks}`;
-        csvContent += row + "\n";
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "student_data.csv");
-    document.body.appendChild(link);
-    link.click();
-}
-
-function downloadPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.text("Student Marks Report", 10, 10);
-    doc.autoTable({
-        head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Total', 'Rem']],
-        body: students.map((student, index) => [
-            student.class,
-            index + 1,
-            student.name,
-            student.sex,
-            student.marks[0],
-            student.marks[1],
-            student.marks[2],
-            student.marks[3],
-            student.marks[4],
-            student.marks[5],
-            student.marks[6],
-            student.totalMarks,
-            student.remarks
-        ]),
-        styles: { cellPadding: 2, fontSize: 8 },
-        columnStyles: { 1: { minCellWidth: 30 } }
-    });
-    doc.save('student_data.pdf');
-}
-
-function submitToGoogleSheet() {
-    const endpoint = "https://script.google.com/macros/s/AKfycbzK0Sc3X5FXqGuB_MYo8Tr3AZHHSZ20_5LZ0AU5dCTNEL52rLM_5hK8uX74eJlrb7l9/exec"; // Replace with your actual endpoint
-    fetch(endpoint, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(students)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Data submitted successfully:", data);
-        alert("Data submitted successfully to Google Sheet!");
-    })
-    .catch(error => {
-        console.error("Error submitting data:", error);
-        alert("Failed to submit data to Google Sheet.");
+    // Ensure you have configured EmailJS correctly with your credentials
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        message: emailContent,
+        recipient_email: "recipient@example.com", // Replace with desired recipient email
+        subject: "Finalized Student Results"
+    }, "YOUR_PUBLIC_KEY")
+    .then(response => {
+        alert("Email sent successfully!");
+        console.log("SUCCESS:", response.status, response.text);
+    }, error => {
+        alert("Failed to send email.");
+        console.error("FAILED:", error);
     });
 }
