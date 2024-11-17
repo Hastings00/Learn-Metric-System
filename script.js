@@ -173,7 +173,7 @@ function sendEmailWithResults() {
 
     emailjs.send("service_bq3459o", "template_3remqv", {
         message: emailContent,
-        recipient_email: "recipient@example.com", // Replace with actual recipient
+        recipient_email: "hephiri3@gmail.com", // Replace with actual recipient
         subject: "Finalized Student Results"
     }, "QFCfDntsjA5TcK0G2")
     .then(response => {
