@@ -184,3 +184,16 @@ function sendEmailWithResults() {
         console.error("FAILED:", error);
     });
 }
+
+function saveDataToLocal() {
+    localStorage.setItem('students', JSON.stringify(students));
+}
+
+function loadDataFromLocal() {
+    const savedStudents = localStorage.getItem('students');
+    if (savedStudents) {
+        students = JSON.parse(savedStudents);
+        displayStudents();
+    }
+}
+
