@@ -148,6 +148,13 @@ function downloadPDF() {
 
 function submitToGoogleSheet() {
     const endpoint = "https://script.google.com/macros/s/AKfycbwF0N_T5nZScVQlsWf3mvfKHe-Ao6hfxCSq5QrhCSAqL1OeTEfjnx_wKY2HEq4NdWwr/exec"; // Replace with your actual endpoint
+    
+    // Check if students array is not empty
+    if (students.length === 0) {
+        alert("No student data to submit.");
+        return;
+    }
+    
     fetch(endpoint, {
         method: "POST",
         headers: {
@@ -155,7 +162,12 @@ function submitToGoogleSheet() {
         },
         body: JSON.stringify(students)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
     .then(data => {
         console.log("Data submitted successfully:", data);
         alert("Data submitted successfully to Google Sheet!");
@@ -165,6 +177,7 @@ function submitToGoogleSheet() {
         alert("Failed to submit data to Google Sheet.");
     });
 }
+
 
 function sendEmailWithResults() {
     const emailContent = students.map((student, index) => 
