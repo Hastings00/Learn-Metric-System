@@ -5,6 +5,7 @@ const docTitle = document.getElementById('doc-title');
 const mainTitle = document.getElementById('main-title');
 const classTitle = document.getElementById('class-title');
 const studentList = document.getElementById('student-list');
+const progressBar = document.getElementById('progress-bar');
 
 classInput.addEventListener('input', updateTitles);
 
@@ -54,6 +55,7 @@ function addStudent() {
     students.push(student);
 
     clearForm();
+    updateProgressBar();
 }
 
 function getRemarks(totalMarks) {
@@ -100,6 +102,13 @@ function clearForm() {
     subjects.forEach(subject => {
         document.getElementById(subject).value = '';
     });
+}
+
+function updateProgressBar() {
+    const totalStudents = students.length;
+    const progress = (totalStudents / 100) * 100;  // Update progress percentage
+    progressBar.style.width = `${progress}%`;
+    progressBar.textContent = `${Math.min(progress, 100)}%`;
 }
 
 function downloadCSV() {
@@ -209,4 +218,3 @@ function loadDataFromLocal() {
         displayStudents();
     }
 }
-
