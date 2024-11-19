@@ -57,6 +57,7 @@ function addStudent() {
 
     clearForm();
     updateProgressBar();
+    displayStudents(); // Ensure student list updates immediately after adding
 }
 
 function getRemarks(totalMarks) {
@@ -221,3 +222,4 @@ function loadDataFromLocal() {
         displayStudents();
     }
 }
+
