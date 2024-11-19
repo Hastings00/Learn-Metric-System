@@ -30,11 +30,6 @@ function addStudent() {
     if (!name || !classValue) {
         alert("Please fill in the class and student name.");
         return;
-        students.push(student);
-    clearForm();
-    updateProgressBar();
-    displayStudents();
-    saveDataToLocal()
     }
 
     // Updated subject list to include Religious Studies
@@ -58,11 +53,12 @@ function addStudent() {
         totalMarks: totalMarks,
         remarks: remarks
     };
-    students.push(student);
 
+    students.push(student);
     clearForm();
     updateProgressBar();
-    displayStudents(); // Ensure student list updates immediately after adding
+    displayStudents();
+    saveDataToLocal();
 }
 
 function getRemarks(totalMarks) {
@@ -88,14 +84,7 @@ function displayStudents() {
             <td>${index + 1}</td>
             <td style="min-width: 150px;">${student.name}</td>
             <td>${student.sex}</td>
-            <td>${student.marks[0]}</td>
-            <td>${student.marks[1]}</td>
-            <td>${student.marks[2]}</td>
-            <td>${student.marks[3]}</td>
-            <td>${student.marks[4]}</td>
-            <td>${student.marks[5]}</td>
-            <td>${student.marks[6]}</td>
-            <td>${student.marks[7]}</td> <!-- Religious Studies column -->
+            ${student.marks.map(mark => `<td>${mark}</td>`).join('')}
             <td>${student.totalMarks}</td>
             <td>${student.remarks}</td>
         `;
@@ -115,7 +104,7 @@ function clearForm() {
 function updateProgressBar() {
     const totalStudents = students.length;
     const progress = (totalStudents / 100) * 100;  // Update progress percentage
-    progressBar.style.width = `${progress}%`;
+    progressBar.style.width = `${Math.min(progress, 100)}%`;
     progressBar.textContent = `${Math.min(progress, 100)}%`;
 }
 
@@ -124,7 +113,7 @@ function downloadCSV() {
     csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Rel,Total,Rem\n"; // Updated header to include Religious Studies
 
     students.forEach((student, index) => {
-        let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.marks[7]},${student.totalMarks},${student.remarks}`;
+        let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks.join(',')},${student.totalMarks},${student.remarks}`;
         csvContent += row + "\n";
     });
 
@@ -147,14 +136,7 @@ function downloadPDF() {
             index + 1,
             student.name,
             student.sex,
-            student.marks[0],
-            student.marks[1],
-            student.marks[2],
-            student.marks[3],
-            student.marks[4],
-            student.marks[5],
-            student.marks[6],
-            student.marks[7], // Religious Studies
+            ...student.marks,
             student.totalMarks,
             student.remarks
         ]),
@@ -167,7 +149,6 @@ function downloadPDF() {
 function submitToGoogleSheet() {
     const endpoint = "https://script.google.com/macros/s/AKfycbzgHX6cdyYmb_EZYuo3Ldh92-wz-D1Xjg3k2ptBR4bQJjvT8dhiL7DzztE4o50amIVa/exec"; // Updated endpoint
     
-    // Check if students array is not empty
     if (students.length === 0) {
         alert("No student data to submit.");
         return;
@@ -204,7 +185,7 @@ function sendEmailWithResults() {
 
     emailjs.send("service_bq3459o", "template_3remqv", {
         message: emailContent,
-        recipient_email: "hephiri3@gmail.com", // Replace with actual recipient
+        recipient_email: "hephiri3@gmail.com",
         subject: "Finalized Student Results"
     }, "QFCfDntsjA5TcK0G2")
     .then(response => {
@@ -225,8 +206,7 @@ function loadDataFromLocal() {
     if (savedStudents) {
         students = JSON.parse(savedStudents);
         displayStudents();
-        window.onload = loadDataFromLocal;
-
     }
 }
 
+window.onload = loadDataFromLocal;
