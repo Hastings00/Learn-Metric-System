@@ -30,6 +30,11 @@ function addStudent() {
     if (!name || !classValue) {
         alert("Please fill in the class and student name.");
         return;
+        students.push(student);
+    clearForm();
+    updateProgressBar();
+    displayStudents();
+    saveDataToLocal()
     }
 
     // Updated subject list to include Religious Studies
