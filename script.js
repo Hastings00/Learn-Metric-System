@@ -32,8 +32,23 @@ function addStudent() {
         return;
     }
 
-    // Updated subject list to include Religious Studies
-    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
+    // Updated subject list based on class input
+    let subjects;
+    switch (classValue.toLowerCase()) {
+        case 'standard 1':
+        case 'standard 2':
+            subjects = ["english", "maths", "chichewa", "social-studies", "expressive-arts", "religious-education"];
+            break;
+        case 'standard 3':
+            subjects = ["english", "maths", "chichewa", "social-studies", "expressive-arts", "religious-education", "life-skills"];
+            break;
+        case 'standard 4':
+            subjects = ["english", "maths", "chichewa", "social-studies", "expressive-arts", "religious-education", "life-skills", "agri-science"];
+            break;
+        default:
+            subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
+    }
+
     let marks = [];
     let totalMarks = 0;
 
@@ -53,8 +68,8 @@ function addStudent() {
         totalMarks: totalMarks,
         remarks: remarks
     };
-
     students.push(student);
+
     clearForm();
     updateProgressBar();
     displayStudents();
@@ -95,22 +110,25 @@ function displayStudents() {
 function clearForm() {
     document.getElementById('name').value = '';
     document.getElementById('sex').value = 'M';
-    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
-    subjects.forEach(subject => {
-        document.getElementById(subject).value = '';
+    const allSubjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
+    allSubjects.forEach(subject => {
+        const element = document.getElementById(subject);
+        if (element) {
+            element.value = '';
+        }
     });
 }
 
 function updateProgressBar() {
     const totalStudents = students.length;
-    const progress = (totalStudents / 100) * 100;  // Update progress percentage
-    progressBar.style.width = `${Math.min(progress, 100)}%`;
+    const progress = (totalStudents / 100) * 100;
+    progressBar.style.width = `${progress}%`;
     progressBar.textContent = `${Math.min(progress, 100)}%`;
 }
 
 function downloadCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Rel,Total,Rem\n"; // Updated header to include Religious Studies
+    csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Rel,Total,Rem\n";
 
     students.forEach((student, index) => {
         let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks.join(',')},${student.totalMarks},${student.remarks}`;
@@ -130,7 +148,7 @@ function downloadPDF() {
     const doc = new jsPDF();
     doc.text("Student Marks Report", 10, 10);
     doc.autoTable({
-        head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Rel', 'Total', 'Rem']], // Updated header to include Religious Studies
+        head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Rel', 'Total', 'Rem']],
         body: students.map((student, index) => [
             student.class,
             index + 1,
@@ -147,8 +165,8 @@ function downloadPDF() {
 }
 
 function submitToGoogleSheet() {
-    const endpoint = "https://script.google.com/macros/s/AKfycbzgHX6cdyYmb_EZYuo3Ldh92-wz-D1Xjg3k2ptBR4bQJjvT8dhiL7DzztE4o50amIVa/exec"; // Updated endpoint
-    
+    const endpoint = "https://script.google.com/macros/s/YOUR_ENDPOINT_URL/exec";
+
     if (students.length === 0) {
         alert("No student data to submit.");
         return;
@@ -169,12 +187,11 @@ function submitToGoogleSheet() {
         return response.json();
     })
     .then(data => {
-        console.log("Data submitted successfully:", data);
         alert("Data submitted successfully to Google Sheet!");
     })
     .catch(error => {
+        alert("Failed to submit data to Google Sheet.");
         console.error("Error submitting data:", error);
-        alert("Failed to submit data to Google Sheet. Please check the console for details.");
     });
 }
 
@@ -185,12 +202,11 @@ function sendEmailWithResults() {
 
     emailjs.send("service_bq3459o", "template_3remqv", {
         message: emailContent,
-        recipient_email: "hephiri3@gmail.com",
+        recipient_email: "example@gmail.com",
         subject: "Finalized Student Results"
-    }, "QFCfDntsjA5TcK0G2")
+    }, "YOUR_USER_ID")
     .then(response => {
         alert("Email sent successfully!");
-        console.log("SUCCESS:", response.status, response.text);
     }, error => {
         alert("Failed to send email.");
         console.error("FAILED:", error);
