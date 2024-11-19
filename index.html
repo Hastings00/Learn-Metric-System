@@ -62,6 +62,10 @@
           
           <label for="agri-science">Agriculture & Science:</label>
           <input type="number" id="agri-science" required>
+
+          <!-- Adding Religious Studies -->
+          <label for="religious-studies">Religious Studies:</label>
+          <input type="number" id="religious-studies" required>
       </div>
 
       <button onclick="addStudent()">Add Student</button>
@@ -86,6 +90,7 @@
               <th>Exp</th>
               <th>Sos</th>
               <th>Agr & Sci</th>
+              <th>Rel</th> <!-- New column for Religious Studies -->
               <th>Total</th>
               <th>Rem</th>
           </tr>
@@ -97,159 +102,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
-  <script src="script.js"></script>
-
-  <script>
-      let students = [];
-
-      const classInput = document.getElementById('class');
-      const docTitle = document.getElementById('doc-title');
-      const mainTitle = document.getElementById('main-title');
-      const classTitle = document.getElementById('class-title');
-
-      classInput.addEventListener('input', function() {
-          const classValue = classInput.value.trim();
-          if (classValue) {
-              mainTitle.textContent = `Learn Metric System - Class ${classValue}`;
-              classTitle.textContent = `Student List - Class ${classValue}`;
-          } else {
-              mainTitle.textContent = 'Learn Metric System';
-              classTitle.textContent = 'Student List';
-          }
-      });
-
-      function addStudent() {
-          const classValue = document.getElementById('class').value.trim();
-          const name = document.getElementById('name').value.trim();
-          const sex = document.getElementById('sex').value;
-          if (!name || !classValue) {
-              alert("Please fill in the class and student name.");
-              return;
-          }
-
-          const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
-          let marks = [];
-          let totalMarks = 0;
-
-          subjects.forEach(subject => {
-              const mark = parseInt(document.getElementById(subject).value) || 0;
-              marks.push(mark);
-              totalMarks += mark;
-          });
-
-          const remarks = getRemarks(totalMarks);
-
-          const student = {
-              class: classValue,
-              name: name,
-              sex: sex,
-              marks: marks,
-              totalMarks: totalMarks,
-              remarks: remarks
-          };
-
-          students.push(student);
-          clearForm();
-      }
-
-      function getRemarks(totalMarks) {
-          if (totalMarks < 300) {
-              return "Failed";
-          } else if (totalMarks <= 350) {
-              return "Average";
-          } else if (totalMarks <= 400) {
-              return "Good";
-          } else if (totalMarks <= 500) {
-              return "Very Good";
-          } else {
-              return "Excellent";
-          }
-      }
-
-      function finalizeEntries() {
-          students.sort((a, b) => b.totalMarks - a.totalMarks);
-          displayStudents();
-      }
-
-      function displayStudents() {
-          const studentList = document.getElementById('student-list');
-          studentList.innerHTML = '';
-
-          students.forEach((student, index) => {
-              const row = document.createElement('tr');
-              row.innerHTML = `
-                  <td>${index + 1}</td>
-                  <td style="min-width: 150px;">${student.name}</td>
-                  <td>${student.sex}</td>
-                  <td>${student.marks[0]}</td>
-                  <td>${student.marks[1]}</td>
-                  <td>${student.marks[2]}</td>
-                  <td>${student.marks[3]}</td>
-                  <td>${student.marks[4]}</td>
-                  <td>${student.marks[5]}</td>
-                  <td>${student.marks[6]}</td>
-                  <td>${student.totalMarks}</td>
-                  <td>${student.remarks}</td>
-              `;
-              studentList.appendChild(row);
-          });
-      }
-
-      function clearForm() {
-          document.getElementById('name').value = '';
-          document.getElementById('sex').value = 'M';
-          const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
-          subjects.forEach(subject => {
-              document.getElementById(subject).value = '';
-          });
-      }
-
-      function downloadCSV() {
-          let csvContent = "data:text/csv;charset=utf-8,";
-          csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Total,Rem\n";
-
-          students.forEach((student, index) => {
-              let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.totalMarks},${student.remarks}`;
-              csvContent += row + "\n";
-          });
-
-          const encodedUri = encodeURI(csvContent);
-          const link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "student_data.csv");
-          document.body.appendChild(link);
-          link.click();
-      }
-
-      function downloadPDF() {
-          const { jsPDF } = window.jspdf;
-          const doc = new jsPDF();
-          doc.text("Student Marks Report", 10, 10);
-          doc.autoTable({
-              head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Total', 'Rem']],
-              body: students.map((student, index) => [
-                  student.class, index + 1, student.name, student.sex,
-                  ...student.marks, student.totalMarks, student.remarks
-              ]),
-          });
-          doc.save("student_data.pdf");
-      }
-
-      function submitToGoogleSheet() {
-          const sheetData = JSON.stringify(students);
-          fetch('https://script.google.com/macros/s/AKfycbzgHX6cdyYmb_EZYuo3Ldh92-wz-D1Xjg3k2ptBR4bQJjvT8dhiL7DzztE4o50amIVa/exec', {
-              method: 'POST',
-              body: sheetData,
-              headers: {
-                  'Content-Type': 'application/json'
-              }
-          }).then(response => response.json())
-            .then(response => {
-                alert("Data submitted successfully to Google Sheet");
-            }).catch(error => {
-                alert("There was an error submitting the data: " + error.message);
-            });
-      }
-  </script>
+  <script src="script.js"></script> <!-- External JavaScript file -->
 </body>
 </html>
