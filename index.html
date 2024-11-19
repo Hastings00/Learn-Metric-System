@@ -30,8 +30,19 @@
   <h1 id="main-title">Student Score Analyzer</h1>
   
   <div id="student-form">
+      <!-- Updated Dropdown for Standard Selection -->
       <label for="class">Standard:</label>
-      <input type="text" id="class" required>
+      <select id="class" onchange="adjustSubjects()">
+          <option value="1">Standard 1</option>
+          <option value="2">Standard 2</option>
+          <option value="3">Standard 3</option>
+          <option value="4">Standard 4</option>
+          <option value="5">Standard 5</option>
+          <option value="6">Standard 6</option>
+          <option value="7">Standard 7</option>
+          <option value="8">Standard 8</option>
+      </select>
+
       <label for="name">Student Name:</label>
       <input type="text" id="name" required>
       
@@ -51,21 +62,20 @@
           <label for="chichewa">Chichewa:</label>
           <input type="number" id="chichewa" required>
           
-          <label for="life-skills">Life Skills:</label>
-          <input type="number" id="life-skills" required>
-          
-          <label for="expressive-arts">Expressive Arts:</label>
-          <input type="number" id="expressive-arts" required>
-          
           <label for="social-studies">Social Studies:</label>
           <input type="number" id="social-studies" required>
-          
+
+          <label for="expressive-arts">Expressive Arts:</label>
+          <input type="number" id="expressive-arts" required>
+
+          <label for="religious-studies">Religious Education:</label>
+          <input type="number" id="religious-studies" required>
+
+          <label for="life-skills">Life Skills:</label>
+          <input type="number" id="life-skills" required>
+
           <label for="agri-science">Agriculture & Science:</label>
           <input type="number" id="agri-science" required>
-
-          <!-- Adding Religious Studies -->
-          <label for="religious-studies">Religious Studies:</label>
-          <input type="number" id="religious-studies" required>
       </div>
 
       <button onclick="addStudent()">Add Student</button>
@@ -86,11 +96,11 @@
               <th>Eng</th>
               <th>Mat</th>
               <th>Chi</th>
-              <th>Lif</th>
-              <th>Exp</th>
               <th>Sos</th>
+              <th>Exp</th>
+              <th>Rel</th>
+              <th>Lif</th>
               <th>Agr & Sci</th>
-              <th>Rel</th> <!-- New column for Religious Studies -->
               <th>Total</th>
               <th>Rem</th>
           </tr>
