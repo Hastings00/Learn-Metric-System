@@ -220,6 +220,8 @@ function loadDataFromLocal() {
     if (savedStudents) {
         students = JSON.parse(savedStudents);
         displayStudents();
+        window.onload = loadDataFromLocal;
+
     }
 }
 
