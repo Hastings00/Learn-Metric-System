@@ -32,7 +32,8 @@ function addStudent() {
         return;
     }
 
-    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
+    // Updated subject list to include Religious Studies
+    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
     let marks = [];
     let totalMarks = 0;
 
@@ -88,6 +89,7 @@ function displayStudents() {
             <td>${student.marks[4]}</td>
             <td>${student.marks[5]}</td>
             <td>${student.marks[6]}</td>
+            <td>${student.marks[7]}</td> <!-- Religious Studies column -->
             <td>${student.totalMarks}</td>
             <td>${student.remarks}</td>
         `;
@@ -98,7 +100,7 @@ function displayStudents() {
 function clearForm() {
     document.getElementById('name').value = '';
     document.getElementById('sex').value = 'M';
-    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science"];
+    const subjects = ["english", "maths", "chichewa", "life-skills", "expressive-arts", "social-studies", "agri-science", "religious-studies"];
     subjects.forEach(subject => {
         document.getElementById(subject).value = '';
     });
@@ -113,10 +115,10 @@ function updateProgressBar() {
 
 function downloadCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Total,Rem\n";
+    csvContent += "Class,Position,Name,Sex,Eng,Mat,Chi,Lif,Exp,Soc,Agr & Sci,Rel,Total,Rem\n"; // Updated header to include Religious Studies
 
     students.forEach((student, index) => {
-        let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.totalMarks},${student.remarks}`;
+        let row = `${student.class},${index + 1},${student.name},${student.sex},${student.marks[0]},${student.marks[1]},${student.marks[2]},${student.marks[3]},${student.marks[4]},${student.marks[5]},${student.marks[6]},${student.marks[7]},${student.totalMarks},${student.remarks}`;
         csvContent += row + "\n";
     });
 
@@ -133,7 +135,7 @@ function downloadPDF() {
     const doc = new jsPDF();
     doc.text("Student Marks Report", 10, 10);
     doc.autoTable({
-        head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Total', 'Rem']],
+        head: [['Class', 'Pos', 'Name', 'Sex', 'Eng', 'Mat', 'Chi', 'Lif', 'Exp', 'Soc', 'Agr & Sci', 'Rel', 'Total', 'Rem']], // Updated header to include Religious Studies
         body: students.map((student, index) => [
             student.class,
             index + 1,
@@ -146,6 +148,7 @@ function downloadPDF() {
             student.marks[4],
             student.marks[5],
             student.marks[6],
+            student.marks[7], // Religious Studies
             student.totalMarks,
             student.remarks
         ]),
@@ -187,7 +190,6 @@ function submitToGoogleSheet() {
         alert("Failed to submit data to Google Sheet. Please check the console for details.");
     });
 }
-
 
 function sendEmailWithResults() {
     const emailContent = students.map((student, index) => 
