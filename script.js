@@ -52,10 +52,15 @@ function addStudent() {
     let marks = [];
     let totalMarks = 0;
 
+    // Loop through only relevant subjects for the current class
     subjects.forEach(subject => {
-        const mark = parseInt(document.getElementById(subject).value) || 0;
-        marks.push(mark);
-        totalMarks += mark;
+        const element = document.getElementById(subject);
+        if (element) {
+            const markValue = element.value.trim();
+            const mark = markValue ? parseInt(markValue) : null; // Treat empty entries as null
+            marks.push(mark);
+            if (mark !== null) totalMarks += mark; // Add only non-null marks
+        }
     });
 
     const remarks = getRemarks(totalMarks);
@@ -99,7 +104,7 @@ function displayStudents() {
             <td>${index + 1}</td>
             <td style="min-width: 150px;">${student.name}</td>
             <td>${student.sex}</td>
-            ${student.marks.map(mark => `<td>${mark}</td>`).join('')}
+            ${student.marks.map(mark => `<td>${mark !== null ? mark : ''}</td>`).join('')}
             <td>${student.totalMarks}</td>
             <td>${student.remarks}</td>
         `;
